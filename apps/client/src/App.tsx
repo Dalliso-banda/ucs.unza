@@ -4,6 +4,7 @@ import { AuthProvider, useAuth } from './context/AuthContext';
 import LoginPage from './pages/LoginPage';
 import Dashboard from './pages/Dashboard';
 import CreateBlog from './pages/CreateBlog';
+import RegisterPage from './pages/RegisterPage';
 
 // --- Protected Route Wrapper ---
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
@@ -58,6 +59,7 @@ function App() {
             />
             
             {/* 404 Fallback */}
+           <Route path="/register" element={<RegisterPage />} />
             <Route path="*" element={<div className="text-center mt-20 text-2xl">404 - Page Not Found</div>} />
           </Routes>
         </Layout>
