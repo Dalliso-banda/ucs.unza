@@ -2,6 +2,10 @@ import { Router } from 'express';
 import { db } from '../db/index.js';
 import { users } from '../db/schema.js';
 
+import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
+
+
 const router = Router();
 
 router.post('/register', async (req, res) => {
@@ -18,6 +22,24 @@ router.post('/register', async (req, res) => {
     res.status(400).json({ error: "Email or username already exists" });
   }
 });
+
+
+
+
+// Add to your existing auth.ts
+router.post('/login', async (req, res) => {
+  const { email, password } = req.body;
+  const [user] = await db.select().from(users).where(eq(users.email, email));
+
+  if (!user || !(await bcrypt.compare(password, user.passwordHash))) {
+    return res.status(401).json({ error: 'Invalid credentials' });
+  }
+
+  const token = jwt.sign({ id: user.id, email: user.email }, 'super-secret-key', { expiresIn: '1h' });
+  res.json({ token, user: { id: user.id, username: user.username } });
+});
+
+
 
 export default router;
 
