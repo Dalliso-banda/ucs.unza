@@ -1,68 +1,93 @@
-# 📚 Project Overview
+🎓 UCS UNZA Monorepo
+A high-performance, full-stack monorepo architecture for the University Computer Society. Built with a focus on type safety, shared logic, and scalable development workflows.
 
-This project is designed to provide a comprehensive solution for managing university courses and facilitating student interactions. It aims to optimize academic workflows and enhance the learning experience for students and faculty.
+🏗️ Architecture Overview
+This project uses pnpm Workspaces to manage multiple packages in a single repository, enabling seamless code sharing and lightning-fast installations.
+- apps/client: Frontend built with React 19, Vite, and Tailwind CSS v4.
+- apps/server: Backend API built with Express, Node.js (ESM), and TypeScript.
+- packages/shared: A shared library for TypeScript interfaces, constants, and validation logic.
 
-## 🌐 Architecture  
-The system follows a modular architecture, ensuring scalability and ease of maintenance. Key components include:
-- **Frontend**: Built with React to provide a dynamic user interface.
-- **Backend**: Node.js and Express for handling API requests.
-- **Database**: MongoDB for data storage, allowing for flexible and scalable schema designs.
+Database: PostgreSQL managed via Drizzle ORM and containerized with Docker.
 
-## ⚙️ Technology Stack  
-- **Frontend**: React, Redux, HTML5, CSS3  
-- **Backend**: Node.js, Express.js  
-- **Database**: MongoDB  
-- **Authentication**: JWT (JSON Web Tokens)  
+🛠️ Technology Stack
+| Layer            | Technology                                                                    |
+|------------------|-------------------------------------------------------------------------------|
+| Package Manager   | pnpm v10                                                                      |
+| Frontend         | React, Vite, Tailwind CSS v4, Axios, React Router                            |
+| Backend          | Express, TypeScript (ESM), ts-node                                          |
+| Database         | PostgreSQL, Drizzle ORM                                                      |
+| Auth             | JSON Web Tokens (JWT), BcryptJS                                             |
+| DevOps           | Docker, Docker Compose                                                       |
 
-## 🚀 Getting Started Guide  
-To get your development environment set up, follow these steps:
+🚀 Getting Started
 
-1. **Clone the repository**:
-   ```bash
-   git clone https://github.com/Dalliso-banda/ucs.unza.git
-   cd ucs.unza
-   ```  
-2. **Install dependencies**:
-   ```bash
-   npm install
-   ```  
-3. **Run the application**:
-   ```bash
-   npm start
-   ```  
+1. Prerequisites
+Ensure you have the following installed:
+- Node.js (LTS)
+- pnpm
+- Docker & Docker Compose
 
-## 🔐 Authentication Workflow  
-The authentication system utilizes JWT for secure access control. Users need to register and login to access different sections of the application. Here's how it works:
-- **Registration**: Users provide email and password.
-- **Login**: Upon successful authentication, a JWT is issued, which should be included in the header for subsequent API requests.
-
-  ```javascript
-  // Example of setting Authorization header
-  axios.get('/api/protected-route', {
-      headers: {
-          'Authorization': `Bearer ${token}`
-      }
-  });
-  ```
-
-## 🗄️ Database Management  
-MongoDB is used for handling data management with Mongoose as the ODM (Object Data Modeling) library. Here’s an example of a Mongoose schema:
-
-```javascript
-const mongoose = require('mongoose');
-const UserSchema = new mongoose.Schema({
-    name: String,
-    email: { type: String, required: true, unique: true },
-    password: { type: String, required: true }
-});
+2. Environment Setup
+Create a .env file in apps/server/.env:
+```bash
+DATABASE_URL=postgresql://dev_user:dev_password@localhost:5432/ucs_unza
+JWT_SECRET=your_random_secret_key_here
 ```
+Use code with caution.
 
-## 📏 Development Standards  
-- **Code Quality**: Follow cleaner code principles.
-- **Styling**: Use Prettier and ESLint for consistent code formatting and linting.
-- **Documentation**: Comment your code and maintain clear documentation for every feature developed.  
+3. Installation
+From the root directory, install all dependencies for all apps:
+```bash
+pnpm install
+```
+Use code with caution.
 
----
+4. Database Initialization
+Spin up the PostgreSQL container and push the schema:
+```bash
+# Start Docker Container
+docker compose up -d
 
-Feel free to reach out for any questions or contributions! 🤗  
-Happy coding! 💻  
+# Generate & Push Schema
+cd apps/server
+pnpm drizzle-kit generate
+pnpm drizzle-kit push
+```
+Use code with caution.
+
+5. Running the App
+Start the entire stack (Frontend + Backend) in parallel from the root:
+```bash
+pnpm dev
+```
+Use code with caution.
+
+Frontend: http://localhost:5173
+Backend: http://localhost:3000
+
+🔐 Authentication Workflow
+- **Registration**: Users register via /api/auth/register. Passwords are hashed using bcryptjs before storage.
+- **Login**: /api/auth/login verifies credentials and returns a JWT.
+- **Storage**: The frontend stores the JWT in localStorage.
+- **Interceptors**: An Axios interceptor in apps/client/src/lib/api.ts automatically attaches the token to the Authorization header for all requests.
+- **Protected Routes**: Backend routes (like blog creation) are guarded by the authenticate middleware.
+
+🗄️ Database Management
+We use Drizzle ORM for a "TypeScript-first" database experience.
+- **Schema Location**: apps/server/src/db/schema.ts
+- **Migrations**: Found in apps/server/drizzle/
+- **GUI Tool**: Run pnpm drizzle-kit studio in the server folder to view data in your browser.
+
+🤝 Development Standards
+- **Commits**: Follow Conventional Commits (e.g., feat(auth): add login logic).
+- **Styles**: Tailwind CSS v4 is used with a CSS-first approach (@import "tailwindcss").
+- **ESM**: The backend uses ES Modules. Always include .js extensions in local imports (e.g., import { x } from './file.js').
+
+**Final Push Checklist**
+Before you sign off, run these to ensure the remote is clean:
+```bash
+git add README.md
+git commit -m "docs: finalize comprehensive monorepo documentation"
+git push origin main
+```
+Use code with caution.
