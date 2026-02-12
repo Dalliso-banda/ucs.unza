@@ -1,35 +1,70 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React from 'react';
+import { BrowserRouter, Routes, Route, Link, Navigate, useNavigate } from 'react-router-dom';
+import { AuthProvider, useAuth } from './context/AuthContext';
+import LoginPage from './pages/LoginPage';
+import Dashboard from './pages/Dashboard';
+import CreateBlog from './pages/CreateBlog';
 
-function App() {
-  const [count, setCount] = useState(0)
+// --- Protected Route Wrapper ---
+const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
+  const { isAuthenticated } = useAuth();
+  return isAuthenticated ? <>{children}</> : <Navigate to="/login" />;
+};
 
+// --- Main Layout with Navbar ---
+const Layout = ({ children }: { children: React.ReactNode }) => {
+  const { user, logout, isAuthenticated } = useAuth();
+  
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <div className="min-h-screen bg-gray-50 text-gray-900">
+      <nav className="flex items-center justify-between bg-white px-8 py-4 shadow-sm">
+        <Link to="/" className="text-xl font-bold text-blue-600">UCS UNZA</Link>
+        <div className="space-x-6 flex items-center">
+          <Link title="Home" to="/" className="hover:text-blue-500">Home</Link>
+          {isAuthenticated ? (
+            <>
+              <Link to="/create" className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">New Post</Link>
+              <span className="text-gray-500 font-medium">Hi, {user?.username}</span>
+              <button onClick={logout} className="text-red-500 hover:underline">Logout</button>
+            </>
+          ) : (
+            <Link to="/login" className="font-semibold text-blue-600">Login</Link>
+          )}
+        </div>
+      </nav>
+      <main className="p-8">{children}</main>
+    </div>
+  );
+};
+
+// --- Main App Component ---
+function App() {
+  return (
+    <AuthProvider>
+      <BrowserRouter>
+        <Layout>
+          <Routes>
+            <Route path="/" element={<Dashboard />} />
+            <Route path="/login" element={<LoginPage />} />
+            
+            {/* Protected Routes */}
+            <Route 
+              path="/create" 
+              element={
+                <ProtectedRoute>
+                  <CreateBlog />
+                </ProtectedRoute>
+              } 
+            />
+            
+            {/* 404 Fallback */}
+            <Route path="*" element={<div className="text-center mt-20 text-2xl">404 - Page Not Found</div>} />
+          </Routes>
+        </Layout>
+      </BrowserRouter>
+    </AuthProvider>
+  );
 }
 
-export default App
+export default App;
+
