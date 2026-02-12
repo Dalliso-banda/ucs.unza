@@ -33,14 +33,14 @@ Create a .env file in apps/server/.env:
 DATABASE_URL=postgresql://dev_user:dev_password@localhost:5432/ucs_unza
 JWT_SECRET=your_random_secret_key_here
 ```
-Use code with caution.
+
 
 3. Installation
 From the root directory, install all dependencies for all apps:
 ```bash
 pnpm install
 ```
-Use code with caution.
+
 
 4. Database Initialization
 Spin up the PostgreSQL container and push the schema:
@@ -53,14 +53,14 @@ cd apps/server
 pnpm drizzle-kit generate
 pnpm drizzle-kit push
 ```
-Use code with caution.
+
 
 5. Running the App
 Start the entire stack (Frontend + Backend) in parallel from the root:
 ```bash
 pnpm dev
 ```
-Use code with caution.
+
 
 Frontend: http://localhost:5173
 Backend: http://localhost:3000
@@ -83,11 +83,4 @@ We use Drizzle ORM for a "TypeScript-first" database experience.
 - **Styles**: Tailwind CSS v4 is used with a CSS-first approach (@import "tailwindcss").
 - **ESM**: The backend uses ES Modules. Always include .js extensions in local imports (e.g., import { x } from './file.js').
 
-**Final Push Checklist**
-Before you sign off, run these to ensure the remote is clean:
-```bash
-git add README.md
-git commit -m "docs: finalize comprehensive monorepo documentation"
-git push origin main
-```
-Use code with caution.
+
