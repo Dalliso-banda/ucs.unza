@@ -1,74 +1,68 @@
-# UCS.UNZA
+# 📚 Project Overview
 
-A modern, high-performance monorepo architecture using **pnpm workspaces**. This setup includes a React frontend, a TypeScript Express backend, and a type-safe database layer.
+This project is designed to provide a comprehensive solution for managing university courses and facilitating student interactions. It aims to optimize academic workflows and enhance the learning experience for students and faculty.
 
-## 🏗 Project Structure
+## 🌐 Architecture  
+The system follows a modular architecture, ensuring scalability and ease of maintenance. Key components include:
+- **Frontend**: Built with React to provide a dynamic user interface.
+- **Backend**: Node.js and Express for handling API requests.
+- **Database**: MongoDB for data storage, allowing for flexible and scalable schema designs.
 
-```text
-ucs.unza/
-├── apps/
-│   ├── client/       # Frontend: React + Vite (TS)
-│   └── server/       # Backend: Express + TypeScript + Drizzle ORM
-├── packages/
-│   └── shared/       # Shared: Common types and constants
-├── drizzle/          # Database: Generated SQL migrations
-├── package.json      # Root config with workspace scripts
-└── pnpm-workspace.yaml
-🛠 Prerequisites
-Node.js (v18+)
+## ⚙️ Technology Stack  
+- **Frontend**: React, Redux, HTML5, CSS3  
+- **Backend**: Node.js, Express.js  
+- **Database**: MongoDB  
+- **Authentication**: JWT (JSON Web Tokens)  
 
-pnpm (v10+)
+## 🚀 Getting Started Guide  
+To get your development environment set up, follow these steps:
 
-PostgreSQL (Local or hosted like Neon.tech)
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/Dalliso-banda/ucs.unza.git
+   cd ucs.unza
+   ```  
+2. **Install dependencies**:
+   ```bash
+   npm install
+   ```  
+3. **Run the application**:
+   ```bash
+   npm start
+   ```  
 
-🚀 Installation & Setup
-Clone and Install:
+## 🔐 Authentication Workflow  
+The authentication system utilizes JWT for secure access control. Users need to register and login to access different sections of the application. Here's how it works:
+- **Registration**: Users provide email and password.
+- **Login**: Upon successful authentication, a JWT is issued, which should be included in the header for subsequent API requests.
 
-Bash
+  ```javascript
+  // Example of setting Authorization header
+  axios.get('/api/protected-route', {
+      headers: {
+          'Authorization': `Bearer ${token}`
+      }
+  });
+  ```
 
-git clone <your-repo-url>
-cd ucs.unza
-pnpm install
-Environment Configuration: Create a .env file in apps/server/:
+## 🗄️ Database Management  
+MongoDB is used for handling data management with Mongoose as the ODM (Object Data Modeling) library. Here’s an example of a Mongoose schema:
 
-Bash
+```javascript
+const mongoose = require('mongoose');
+const UserSchema = new mongoose.Schema({
+    name: String,
+    email: { type: String, required: true, unique: true },
+    password: { type: String, required: true }
+});
+```
 
-DATABASE_URL=postgres://user:password@localhost:5432/ucs_unza
-Initialize Database: Generate the SQL migrations and push the schema to your database:
+## 📏 Development Standards  
+- **Code Quality**: Follow cleaner code principles.
+- **Styling**: Use Prettier and ESLint for consistent code formatting and linting.
+- **Documentation**: Comment your code and maintain clear documentation for every feature developed.  
 
-Bash
+---
 
-cd apps/server
-pnpm drizzle-kit generate
-pnpm drizzle-kit push
-💻 Development
-Run both the frontend and backend simultaneously from the root:
-
-Bash
-
-pnpm dev
-Frontend: http://localhost:5173
-
-Backend API: http://localhost:3000/api
-
-🗄️ Database Schema
-The system is currently configured with the following tables:
-
-Users: Authentication and profile data.
-
-Blogs: Post content linked to authors.
-
-Notifications: User-specific alerts and system messages.
-
-To modify the schema, edit apps/server/src/db/schema.ts and run:
-
-Bash
-
-pnpm drizzle-kit generate
-📜 Deployment
-Build all projects:
-
-Bash
-
-pnpm build
-The production-ready files are located in the respective dist/ folders.
+Feel free to reach out for any questions or contributions! 🤗  
+Happy coding! 💻  
